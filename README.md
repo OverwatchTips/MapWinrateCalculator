@@ -30,7 +30,7 @@
     <h2 id="Setup">Setup</h2>
     <p>
         To setup this application, you need Java 16, the latest LTS release as of June 2022.
-        Just download it, and run it.
+        Just download it, and run it. To calculate your stats, you also need to have a public OverTrack share link.
     </p>
 </article>
 <hr>
