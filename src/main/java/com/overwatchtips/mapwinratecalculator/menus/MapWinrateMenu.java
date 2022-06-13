@@ -1,8 +1,7 @@
 package com.overwatchtips.mapwinratecalculator.menus;
 
 import com.jidesoft.swing.StyledLabel;
-import com.overwatchtips.mapwinratecalculator.Main;
-import com.overwatchtips.mapwinratecalculator.MapWinrateCalculator;
+import com.jidesoft.swing.StyledLabelBuilder;
 import com.overwatchtips.mapwinratecalculator.records.MapData;
 
 import javax.imageio.ImageIO;
@@ -34,13 +33,26 @@ public class MapWinrateMenu extends JFrame {
         GridLayout experimentLayout = new GridLayout(4,5);
         setSize(800, 600);
         setLayout(experimentLayout);
+
+        DecimalFormat format = new DecimalFormat("##.#");
+
+        long games = mapData.values().stream().mapToLong(MapData::games).sum();
+        long wins = mapData.values().stream().mapToLong(MapData::wins).sum();
+        long losses = mapData.values().stream().mapToLong(MapData::losses).sum();
+        long draws = mapData.values().stream().mapToLong(MapData::draws).sum();
+        double winrate = mapData.values().stream().mapToDouble(MapData::winrate).sum() / 19;
+
+        JLabel total = createLabel(Arrays.asList("{Overall Data:b}",
+                "Total Games: " + games,
+                "Record: " + wins + "-" + losses + "-" + draws,
+                "Winrate: " + format.format(winrate) + "%"));
+        add(total);
+
         for (Map.Entry<String, MapData> entry : mapData.entrySet()) {
             String map = entry.getKey();
             MapData data = entry.getValue();
 
-            DecimalFormat format = new DecimalFormat("##.#");
-
-            JLabel icon = createLabel(Arrays.asList(map + ": " + format.format(data.winrate()) + "%",
+            JLabel icon = createLabel(Arrays.asList("{" + map + "\\: " + format.format(data.winrate()) + "%:b}",
                     "Total Games: " + data.games(),
                     "Record: " + data.wins() + "-" + data.losses() + "-" + data.draws()));
             InputStream is = getClass().getClassLoader().getResourceAsStream("assets/" + map.toLowerCase().replace(" ", "-").replaceAll("[^A-Za-z0-9-]", "") + ".png");
@@ -54,7 +66,7 @@ public class MapWinrateMenu extends JFrame {
     }
 
     private StyledLabel createLabel(List<String> text) {
-        StyledLabel label = new StyledLabel(String.join("\n", text));
+        StyledLabel label = StyledLabelBuilder.createStyledLabel(String.join("\n", text));
         label.setHorizontalTextPosition(JLabel.CENTER);
         label.setVerticalTextPosition(JLabel.BOTTOM);
 
